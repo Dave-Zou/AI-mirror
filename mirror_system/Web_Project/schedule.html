@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>schedule</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap-4.2.1.css" rel="stylesheet">
+    <script src="./js/general.js"></script>
+
+    <style type="text/css">
+        .area-1 {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+
+        }
+
+        .area-2 {
+            position: absolute;
+            right: 50px;
+            top: 30px;
+            text-align: center;
+        }
+
+        .area-3 {
+            position: absolute;
+            left: 30%;
+            top: 55%;
+            transform: translateX(-50%) translateY(-50%);
+            text-align: center;
+        }
+
+        .font-size-1 {
+            font-size: 55px;
+        }
+
+        .font-size-2 {
+            font-size: 35px;
+        }
+
+        .area-4 {
+            margin-bottom: 40px;
+        }
+
+    </style>
+
+
+</head>
+<body style="color: aliceblue; background: #000000">
+
+<div class="area-1">
+    <h1 id="dateTime" style="font-size: 100px;"></h1>
+</div>
+
+<div class="area-2">
+    <h1 class="text-right" style="font-size: 100px;">12°C/3°C</h1>
+    <div class=" "><img src="images/weather_4.png" alt="weather" width="200px"></div>
+</div>
+
+
+<div class="area-3">
+    <!--  日程表-->
+    <div class="area-4">
+        <span style="margin-left: 30px;"><img src="images/Schdule.png" alt="Schedule"></span>
+        <span style="margin-left: 10px;font-size: 40px;font-weight: 300;">Schedule</span>
+    </div>
+
+    <div class="area-5">
+        <h2 class="text-left" style="margin-left: 30px;color:aquamarine">March</h2>
+        <div>
+            <p class="text-left">
+                <span class="font-size-1" style="margin-left: 30px; margin-right: 20px;"> 01 day </span>
+                <span class="font-size-2"> School opens. </span> <img src="images/right.png" alt="">
+            </p>
+        </div>
+        <div>
+            <p class="text-left">
+                <span class="font-size-1" style="margin-left: 30px; margin-right: 20px;"> 02 day </span>
+                <span class="font-size-2"> Class starts. </span> <img src="images/right.png" alt="">
+            </p>
+        </div>
+        <div>
+            <p class="text-left">
+                <span class="font-size-1" style="margin-left: 30px; margin-right: 20px; color: #35D016; "> 06 day </span>
+                <span class="font-size-2" style="color: #35D016; "> Rest day. </span>
+            </p>
+        </div>
+        <div>
+            <p class="text-left">
+                <span class="font-size-1"
+                      style="margin-left: 30px; margin-right: 20px; color: #35D016; "> 07 day </span>
+                <span class="font-size-2" style="color: #35D016; "> Rest day. </span>
+            </p>
+        </div>
+    </div>
+
+
+    <!--  间隔-->
+    <div style="height: 80px;"></div>
+    <div class="col-lg-12">
+        <p class="text-left">Don't give up.There are more ways than difficulties.</p>
+        <!-- <a href="control.html">control.</a> -->
+    </div>
+    <!--  底部文字信息-->
+    <div class="col-lg-12"></div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap-4.2.1.js"></script>
+</div>
+</body>
+</html>

@@ -1,4 +1,3 @@
-// JavaScript Document
 Date.prototype.format = function(fmt) {
 	var o = {
 		"y+": this.getFullYear, //年
@@ -14,6 +13,11 @@ Date.prototype.format = function(fmt) {
 			"00" + o[k]).substr(("" + o[k]).length)));
 	return fmt;
 }
-setInterval("document.getElementById('dateTime').innerHTML = (new Date()).format('yyyy-MM-dd hh:mm:ss');", 1000);
+
+let t = document.getElementById('dateTime');
+if (t != null){
+	setInterval("t.innerHTML = (new Date()).format('yyyy-MM-dd hh:mm:ss');", 1000);
+}
+
 
 

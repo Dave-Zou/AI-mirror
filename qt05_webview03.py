@@ -23,8 +23,12 @@ class MainWindow(QMainWindow):
         self.showMaximized()  # 最大化
         self.setWindowFlags(Qt.FramelessWindowHint)  # 隐藏标题栏
         self.webview = WebEngineView()  # 浏览器初始化
-        url = root_path + r"\mirror_system\page1.html"
+        print(root_path)
+        # 开启进入初始界面
+        url = root_path + r"/mirror_system/Web_Project/index.html"
         url = url.replace('\\', '/')  # url
+        print(url)
+
         self.webview.load(QUrl(url))
         self.setCentralWidget(self.webview)
 
@@ -70,6 +74,9 @@ class qt_main:
     def proRate(self, id_name, rate):
         self.w.webview.page().runJavaScript(f'pro_rate("{id_name}", {rate});')
 
+    def location(self, page_name):
+        self.w.webview.page().runJavaScript(f'window.location.href="{page_name}.html";')
+
 def changeValue(obj, lk, q):
     while True:
         with lk:
@@ -81,10 +88,14 @@ def changeValue(obj, lk, q):
                 elif info['name'] == 'Pos': # 位置偏移
                     x, y = value = info['value']
                     obj.movePos(x, y)
-                elif info['name'] == 'pro_rate':
+                elif info['name'] == 'pro_rate': # 处理进度
                     id_name, rate = value = info['value']
                     print(id_name, rate)
                     obj.proRate(id_name, rate)
+                elif info['name'] == 'location': # 重定位
+                    value = info['value']
+                    obj.location(value)
+
 
 def runWindow(lk, q):
     Ball = qt_main()
