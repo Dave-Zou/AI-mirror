@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control</title>
+<!-- Bootstrap -->
+<link href="css/bootstrap-4.2.1.css" rel="stylesheet">
+<link href="test-1.css" rel="stylesheet">
+<link rel="stylesheet" href="css/control_style.css">
+<script src="test-1.js"></script>
+</head>
+<body style="color: aliceblue; background: #000000">
+<div class="container">
+  <hr>
+  <div class="row"> 
+    <!--  日期时间-->
+    <div class="col-6">
+      <h1 id="dateTime"></h1>
+    </div>
+    <!--  温度天气-->
+    <div class="col-6">
+      <h1 class="text-right">12°C/3°C</h1>
+      <div class="col-lg-12 " align="right"><img src="images/weather_4.png" alt="weather"></div>
+    </div>
+  </div>
+  
+  <!--  间隔-->
+  <div style="height: 100px;"></div>
+  <hr>
+  <!--  日程表-->
+  <div align="center"> <span style="margin-left: 30px;" ><img src="images/Control.png" alt="Schedule"></span> <font class="text-left" style="margin-left: 10px;font-size: 40px;font-weight: 700;">Control</font></div>
+  <div class="row" style="margin-top: 50px;">
+    <div class="col-6 toggle toggle--neon"> 
+      <img src="images/air_conditioner.png" alt="">
+      <input type="checkbox" id="toggle--neon" class="toggle--checkbox">
+      <label class="toggle--btn" for="toggle--neon" data-label-on="on"  data-label-off="off"></label>
+    </div>
+    <div class="col-6 toggle toggle--neon"> 
+      <img src="images/bathroom.png" alt="">
+      <input type="checkbox" id="toggle--neon1" class="toggle--checkbox">
+      <label class="toggle--btn" for="toggle--neon1" data-label-on="on"  data-label-off="off"></label>
+    </div>
+    <div class="col-6 toggle toggle--neon"> 
+      <img src="images/microwave.png" alt="">
+      <input type="checkbox" id="toggle--neon2" class="toggle--checkbox">
+      <label class="toggle--btn" for="toggle--neon2" data-label-on="on"  data-label-off="off"></label>
+    </div>
+    <div class="col-6 toggle toggle--neon"> 
+      <img src="images/refrigerator.png" alt="">
+      <input type="checkbox" id="toggle--neon3" class="toggle--checkbox">
+      <label class="toggle--btn" for="toggle--neon3" data-label-on="on"  data-label-off="off"></label>
+    </div>
+  </div>
+  <!--  间隔-->
+  <div style="height: 80px;"></div>
+    <div class="col-lg-12">
+    <p class="text-left">Don't give up.There are more ways than difficulties.</p>
+    <!-- <a href="heathy.html">healthy.</a> -->
+  </div>
+  <!--  底部文字信息-->
+  <div class="col-lg-12"> </div>
+  
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> 
+  <script src="js/jquery-3.3.1.min.js"></script> 
+  <!-- Include all compiled plugins (below), or include individual files as needed --> 
+  <script src="js/popper.min.js"></script> 
+  <script src="js/bootstrap-4.2.1.js"></script> 
+</div>
+</body>
+</html>

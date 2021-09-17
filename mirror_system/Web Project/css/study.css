@@ -1,0 +1,231 @@
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+body{
+	
+}
+.home-pages-1{
+  background: url(../img/background2.jpg);
+  height: 180px;
+  position: relative;
+  z-index: 0;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+
+
+
+/* 导航栏部分 */
+.top-menu{
+	position: absolute;
+	width: 100%;
+	top: 10px;
+
+}
+
+.center-menu{
+	text-align: center;
+	display: flex;
+	
+}
+
+.center-menu li{
+	display: inline-block;
+
+}
+
+.center-menu li > a{
+	height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none;
+	color: #fff;
+}
+
+.center-menu .ul-left-menu{
+	font-size: 30px;
+	margin-left: 3%;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+.center-menu .ul-center-menu{
+	width: 70%;
+	margin: auto;
+	align-self: center;
+	font-weight: 100;
+}
+.center-menu .ul-right-menu{
+	margin-right: 10px;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.ul-center-menu li{
+	width: 15%;
+}
+.ul-center-menu a:hover{
+	color: aquamarine;
+}
+.ul-right-menu li a{
+	width: 100px;
+	
+}
+
+.direct-location{
+	margin-top: 100px;
+	margin-left: 60px;
+	color: aliceblue;
+}
+
+.direct-location a{
+	font-weight: 1000;
+	color: aliceblue;
+	text-decoration: none;
+}
+.direct-location a:hover{
+	text-decoration: underline;
+}
+
+
+/* 主页主体 */
+
+
+
+/* 第二页 */
+.home-pages-2{
+	
+}
+.p2-body{
+	width: 100%;
+	height: calc(100vh);
+
+}
+.p2-text-title{
+	margin: auto;
+	margin-top: calc(10vh);
+	
+	font-size: 2em;
+	font-weight: 500;
+	letter-spacing: 10px;
+}
+.p2-body-center{
+	margin: auto;
+	width: 600px;
+	height: 100%;
+	border: 1px solid #222222;
+	color: #ffffff;
+	text-align: ;
+}
+.p2-body-center p{
+	margin-top: 30px;
+	font-weight: 300;
+	font-size: 20px;
+	text-indent: 2em;
+	padding: 1rem;
+}
+.js-button{
+	width: 200px;
+	height: 50px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 30px;
+	list-style: none;
+	outline: none;
+	padding: 0;
+	font-family: 'Poppins', sans-serif;
+	box-sizing: border-box;
+	color: #FFFFFF;
+	
+}
+
+.p2-body-center-iframe{
+	min-width: 1600px;
+	width: calc(100vh);
+	margin: auto;
+}
+.p2-body-center-iframe iframe{
+	margin: 0 auto;
+	width: 1600px;
+	height: 800px;
+	
+}
+
+
+.bg3{
+	background: url(../img/background6.jpg)no-repeat;
+	background-size: cover;
+	min-height: 100vh;
+	position: relative;
+	z-index: 0;
+}
+.bg4{
+	background: url(../img/background7.jpg)no-repeat;
+	background-size: cover;
+	min-height: 100vh;
+	position: relative;
+	z-index: 0;
+}
+button {
+	padding: 20px 50px;
+	font-size: 1.5rem;
+	cursor: pointer;
+	border-color: aliceblue;
+	background: transparent;
+	position: relative;
+	margin: 20px;
+	transition: all .25s ease;
+}
+
+
+/* 页面底部 */
+.footer-page{
+
+}
+.footer-div{
+	
+	padding: 2rem 0px;
+	background-color: #222222;
+}
+.footer-body{
+	text-align: center;
+	height: 50px;
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-top: 20px;
+	max-width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.footer-body img{
+	margin-left: 10px;
+	margin-right: 10px;
+	width: 50px;
+	border-radius: 50px;
+}
+.footer-body img:hover{
+	background-color: aquamarine;
+}
+
+.footer-bottom{
+	max-width: 900px;
+	text-align: center;
+	border-top: 1px solid #454545;
+	padding-top: 2em;
+	margin-top: 2em;
+	margin-bottom: 2rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.footer-bottom p{
+	font-weight: normal;
+	font-size: 16px;
+	line-height: 25px;
+	color: #aaa;
+}
