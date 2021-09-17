@@ -45,12 +45,12 @@ class hand:
         移动位置
     '''
 
-    def changeBallPosition(self, choose_pt):
-        if choose_pt is None:
+    def changeBallPosition(self, plam_center):
+        if plam_center is None:
             return
         # 获取显示位置
-        x = choose_pt[0]
-        y = choose_pt[1]
+        x = plam_center[0]
+        y = plam_center[1]
         print(x, y)
         # 等比例映射到Qt界面的位置
         x = 100 + x * ((self.windowSize[0] - 200) / self.capSize[0])
@@ -137,7 +137,7 @@ class hand:
         elif state_num == 2:
             self.interactive_2_x_range = (100, 400)
             self.interactive_2_y_range = (200, 400)
-            self.interactive_2_size_threshold = 40
+            self.interactive_2_size_threshold = 20
 
             self.interactive_2_start_time = time.time()
             self.interactive_2_recharge_hand_id = -1
@@ -333,7 +333,7 @@ class hand:
                 # recharge_complete_time: 充能完成时间
                 # recharge_id_info: ID充能时的信息，大小和位置
 
-                if time.time() - self.interactive_2_start_time > 5:
+                if time.time() - self.interactive_2_start_time > 10:
                     self.state_init(2)
                     self.state = 'normal'
                     self.update_pro_rate(1)
@@ -457,8 +457,8 @@ class hand:
                 if size_condition:  # 满足控制大小的条件
                     print('size condition')
                     # 是否正在控制
-
+                    self.changeBallSize(hands_angle_list[i])
 
                 if position_condition:  # 满足控制位置的条件
                     print('changePos')
-                    self.changeBallPosition(hand[3]['choose_pt'])
+                    self.changeBallPosition(hand_plam_center)

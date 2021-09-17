@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
         self.showMaximized()  # 最大化
         self.setWindowFlags(Qt.FramelessWindowHint)  # 隐藏标题栏
         self.webview = WebEngineView()  # 浏览器初始化
-        url = r"J:\Project\gesture\dpcas-master\dpcas-master\dpcas-master\mirror_system\page1.html"
+        url = r"C:\Users\Fix\Documents\OpenProject\gesture\dpcas-master\dpcas-master\mirror_system\page1.html"
         url = url.replace('\\', '/')  # url
         self.webview.load(QUrl(url))
         self.setCentralWidget(self.webview)
