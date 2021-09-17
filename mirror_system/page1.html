@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>mirror_system</title>
+		<link rel="stylesheet" type="text/css" href="./css/Start.css"/>
+	</head>
+	<body>
+<!-- 		<div class="display-area-1">
+			<iframe src="./html/time_clock/index.html" width="450px" height="450px" frameborder="0" scrolling="no"></iframe>
+		</div> -->
+		<div id="interactive_1" class="interactive_1"></div>
+		<div id="interactive_2" class="interactive_2"></div>
+		<div id="test_circle" class="display-area-2"></div>
+		
+	</body>
+	<script type="text/javascript">
+		const test_circle = document.getElementById('test_circle');
+
+		function widthAdd(d){
+			
+			test_circle.style.width = d + 'px';
+			test_circle.style.height = d + 'px';
+			return test_circle.style.width;
+		}
+
+		function movePos(x, y) {
+				test_circle.style.left = x + 200 + 'px';
+				test_circle.style.top = y + 200 + 'px';
+				return [test_circle.style.left, test_circle.style.top];
+		}
+
+		function pro_rate(id_name, rate) {
+			let pro = document.getElementById(id_name);
+			pro.style.width = rate + '%';
+			return pro.clientWidth;
+		}
+	</script>
+	
+</html>
