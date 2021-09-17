@@ -1,12 +1,15 @@
 import sys
 import time
 import threading
+import os
 from multiprocessing import Process, Lock, Manager, Queue
 
 from PyQt5.QtCore import *
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import *
 
+
+root_path = os.path.abspath(os.path.dirname('__file__'))
 
 ################################################
 #######创建主窗口
@@ -20,7 +23,7 @@ class MainWindow(QMainWindow):
         self.showMaximized()  # 最大化
         self.setWindowFlags(Qt.FramelessWindowHint)  # 隐藏标题栏
         self.webview = WebEngineView()  # 浏览器初始化
-        url = r"C:\Users\Fix\Documents\OpenProject\gesture\dpcas-master\dpcas-master\mirror_system\page1.html"
+        url = root_path + r"\mirror_system\page1.html"
         url = url.replace('\\', '/')  # url
         self.webview.load(QUrl(url))
         self.setCentralWidget(self.webview)
