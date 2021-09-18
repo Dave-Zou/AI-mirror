@@ -77,6 +77,9 @@ class qt_main:
     def location(self, page_name):
         self.w.webview.page().runJavaScript(f'window.location.href="{page_name}.html";')
 
+    def proRateControlPage(self, rate):
+        self.w.webview.page().runJavaScript(f'updateProcessRate({rate});')
+
 def changeValue(obj, lk, q):
     while True:
         with lk:
@@ -95,7 +98,9 @@ def changeValue(obj, lk, q):
                 elif info['name'] == 'location': # 重定位
                     value = info['value']
                     obj.location(value)
-
+                elif info['name'] == 'pro_rate_controlPage':
+                    value = info['value']
+                    obj.proRateControlPage(value)
 
 def runWindow(lk, q):
     Ball = qt_main()

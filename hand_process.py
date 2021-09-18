@@ -331,6 +331,7 @@ class hand:
                 # 重置状态
                 self.five_recharge.__init__(isReset=True)
                 return 'five Out'
+            self.update_rate('next_rate', self.five_recharge)
             print('five power rate: ', self.five_recharge.recharge_rate, self.five_recharge.recharge_id_info['size'])  # 显示充能完成率
         if not self.five_recharge.recharge_signal:  # 如果five没在充能
             if self.fist_recharge.recharge(handPose_list, gesture_list) == 'recharge complete':
@@ -338,12 +339,19 @@ class hand:
                 # 重置状态
                 self.fist_recharge.__init__(isReset=True)
                 return 'fist Out'
+            self.update_rate('back_rate', self.fist_recharge)
             print('fist power rate: ', self.fist_recharge.recharge_rate, self.fist_recharge.recharge_id_info['size'])  # 显示充能完成率
 
 
     def windowLocation(self):
         value = self.state.split(' ')[0]
         info = {'isChange': True, 'name': 'location', 'value': value}
+        self.q.put(info)
+
+    def update_rate(self, name, recharge):
+        info = {'isChange': True, 'name': 'pro_rate', 'value': (f'{name}', recharge.recharge_rate)}
+        if self.state == 'control page':
+            info['name'] = 'pro_rate_controlPage'
         self.q.put(info)
 
     def update_state(self, handPose_list, gesture_list, hands_angle_list):

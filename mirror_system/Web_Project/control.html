@@ -1,71 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Control</title>
-<!-- Bootstrap -->
-<link href="css/bootstrap-4.2.1.css" rel="stylesheet">
-<link rel="stylesheet" href="css/control_style.css">
-<script src="./js/general.js"></script>
-</head>
-<body style="color: aliceblue; background: #000000; border: 0">
-<div class="container">
-<!--  <hr>-->
-<!--  <div class="row"> -->
-<!--    &lt;!&ndash;  日期时间&ndash;&gt;-->
-<!--    <div class="col-6">-->
-<!--      <h1 id="dateTime"></h1>-->
-<!--    </div>-->
-<!--    &lt;!&ndash;  温度天气&ndash;&gt;-->
-<!--    <div class="col-6">-->
-<!--      <h1 class="text-right">12°C/3°C</h1>-->
-<!--      <div class="col-lg-12 " align="right"><img src="images/weather_4.png" alt="weather"></div>-->
-<!--    </div>-->
-<!--  </div>-->
-  
-  <!--  间隔-->
-<!--  <div style="height: 100px;"></div>-->
-  <hr>
-  <!--  日程表-->
-  <div align="center"> <span style="margin-left: 30px;" ><img src="images/Control.png" alt="Schedule"></span> <font class="text-left" style="margin-left: 10px;font-size: 40px;font-weight: 700;">Control</font></div>
-  <div class="row" style="margin-top: 50px;">
-    <div class="col-6 toggle toggle--neon"> 
-      <img src="images/air_conditioner.png" alt="">
-      <input type="checkbox" id="toggle--neon" class="toggle--checkbox">
-      <label class="toggle--btn" for="toggle--neon" data-label-on="on"  data-label-off="off"></label>
-    </div>
-    <div class="col-6 toggle toggle--neon"> 
-      <img src="images/bathroom.png" alt="">
-      <input type="checkbox" id="toggle--neon1" class="toggle--checkbox">
-      <label class="toggle--btn" for="toggle--neon1" data-label-on="on"  data-label-off="off"></label>
-    </div>
-    <div class="col-6 toggle toggle--neon"> 
-      <img src="images/microwave.png" alt="">
-      <input type="checkbox" id="toggle--neon2" class="toggle--checkbox">
-      <label class="toggle--btn" for="toggle--neon2" data-label-on="on"  data-label-off="off"></label>
-    </div>
-    <div class="col-6 toggle toggle--neon"> 
-      <img src="images/refrigerator.png" alt="">
-      <input type="checkbox" id="toggle--neon3" class="toggle--checkbox">
-      <label class="toggle--btn" for="toggle--neon3" data-label-on="on"  data-label-off="off"></label>
-    </div>
-  </div>
-  <!--  间隔-->
-<!--  <div style="height: 80px;"></div>-->
-<!--    <div class="col-lg-12">-->
-<!--    <p class="text-left">Don't give up.There are more ways than difficulties.</p>-->
-<!--    &lt;!&ndash; <a href="healthy.html">healthy.</a> &ndash;&gt;-->
-<!--  </div>-->
-  <!--  底部文字信息-->
-  <div class="col-lg-12"> </div>
-  
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> 
-  <script src="js/jquery-3.3.1.min.js"></script> 
-  <!-- Include all compiled plugins (below), or include individual files as needed --> 
-  <script src="js/popper.min.js"></script> 
-  <script src="js/bootstrap-4.2.1.js"></script> 
-</div>
-</body>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Control</title>
+		<!-- Bootstrap -->
+		<link href="css/bootstrap-4.2.1.css" rel="stylesheet">
+		<link rel="stylesheet" href="css/control_style.css">
+		<script src="./js/general.js"></script>
+		<link rel="stylesheet" href="./css/general.css">
+
+		<style type="text/css">
+			body {
+				
+			}
+			.title-control {
+				position: absolute;
+				left: 50%;
+				top: 100px;
+				transform: translateX(-50%);
+			}
+
+			.center-content {
+				position: absolute;
+				left: 50%;
+				transform: translateX(-50%);
+				top: 300px;
+				width: 80%;
+				border: rgba(85, 255, 255, 0.0) solid 5px;
+				transition: border-color 0.5s;
+			}
+
+			.center-content div {
+				display: inline-block;
+			}
+
+			.center-content div img {
+				width: 150px;
+			}
+
+			.recharge-1 {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translateX(-50%) translateY(-50%);
+				width: 5px;
+				height: 0%;
+				background-color: rgba(85, 255, 255, 0.8);
+				transition: background-color 0.5s, height 0.5s; 
+			}
+			
+			.recharge-2 {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translateX(-50%) translateY(-50%);
+				width: 0%;
+				height: 5px;
+				background-color: rgba(85, 255, 255, 0.8);
+				transition: background-color 0.5s, width 0.5s;
+			}
+			
+		</style>
+
+		<script type="text/javascript">
+			function changeShellColorTransparent(transparent){
+				var cc = document.getElementById('center-content');
+				var ccc = window.getComputedStyle(cc, null);
+				var color = ccc.borderColor;
+				var newColor = color.split(',').slice(0, 3).toString() + ', ' + transparent + ')';
+				console.log(newColor);
+				cc.style.borderColor = newColor;
+			}
+			
+			function changeRechargeLength(len){ // len为百分比
+				var recharge_1 = document.getElementById('recharge-1');
+				var recharge_2 = document.getElementById('recharge-2');
+				recharge_1.style.height = len + '%';
+				recharge_2.style.width = len + '%';
+			}
+			
+			function updateProcessRate(rate){ // rate是进度，0-100
+				changeShellColorTransparent(rate/100.);
+				changeRechargeLength(rate);
+			}
+			
+		</script>
+
+		
+
+	</head>
+	<body style="color: aliceblue; background: #000000; border: 0">
+		<div id="next_rate"></div>
+		<div id="back_rate"></div>
+
+		<!--  标题-控制  -->
+		<div class="title-control">
+			<img src="images/Control.png" alt="Schedule">
+			<span class="text-left" style="margin-left: 10px;font-size: 40px;font-weight: 700;">Control</span>
+		</div>
+
+		<!-- 中间图标 -->
+		<div id="center-content" class="center-content container">
+			<div class="toggle toggle--neon col-md-5">
+				<img src="images/air_conditioner.png" alt="">
+				<input type="checkbox" id="toggle--neon" class="toggle--checkbox">
+				<label class="toggle--btn" for="toggle--neon" data-label-on="on" data-label-off="off"></label>
+			</div>
+
+
+			<div class="toggle toggle--neon offset-md-1 col-md-5">
+				<img src="images/bathroom.png" alt="">
+				<input type="checkbox" id="toggle--neon1" class="toggle--checkbox">
+				<label class="toggle--btn" for="toggle--neon1" data-label-on="on" data-label-off="off"></label>
+			</div>
+
+
+			<div class="toggle toggle--neon col-md-5">
+				<img src="images/microwave.png" alt="">
+				<input type="checkbox" id="toggle--neon2" class="toggle--checkbox">
+				<label class="toggle--btn" for="toggle--neon2" data-label-on="on" data-label-off="off"></label>
+			</div>
+
+
+			<div class="toggle toggle--neon offset-md-1 col-md-5">
+				<img src="images/refrigerator.png" alt="">
+				<input type="checkbox" id="toggle--neon3" class="toggle--checkbox">
+				<label class="toggle--btn" for="toggle--neon3" data-label-on="on" data-label-off="off"></label>
+			</div>
+
+			<!-- 中心十字充能标记 -->
+			<div id="recharge-1" class="recharge-1"></div> <!-- 竖线 -->
+			<div id="recharge-2" class="recharge-2"></div> <!-- 横线 -->
+		</div>
+
+
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="js/jquery-3.3.1.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="js/popper.min.js"></script>
+		<script src="js/bootstrap-4.2.1.js"></script>
+
+	</body>
 </html>

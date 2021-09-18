@@ -1,7 +1,23 @@
 
-#next-rate {
+#next_rate {
     position: absolute;
     left: 0;
     top: 0;
-
+    width: 1%;
+    height: 10px;
+    transition: width 0.5s;
+    border: rgba(250, 255, 10, 0.82);
+    background-color: rgba(250, 255, 10, 0.96);
 }
+
+#back_rate {
+    position: absolute;
+    left: 0;
+    top: 15px;
+    width: 1%;
+    height: 10px;
+    transition: width 0.5s;
+    border: rgba(18, 255, 10, 0.8) solid 2px;
+    background-color: rgba(10, 255, 34, 0.99);
+}
+

@@ -14,10 +14,19 @@ Date.prototype.format = function(fmt) {
 	return fmt;
 }
 
-let t = document.getElementById('dateTime');
-if (t != null){
-	setInterval("t.innerHTML = (new Date()).format('yyyy-MM-dd hh:mm:ss');", 1000);
+
+
+
+
+window.onload = function(){
+	if (document.getElementById('dateTime') != null)
+		setInterval("document.getElementById('dateTime').innerHTML = (new Date()).format('yyyy-MM-dd hh:mm:ss');", 1000);
+};
+
+function pro_rate(id_name, rate) {
+	console.log(id_name);
+	var pro = document.getElementById(id_name);
+	pro.style.width = rate + '%';
+	return pro.clientWidth;
 }
-
-
 

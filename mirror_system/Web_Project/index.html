@@ -1,73 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" lang="zh">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>information</title>
-		<!-- Bootstrap -->
-		<link href="css/bootstrap-4.2.1.css" rel="stylesheet">
-		<script src="./js/general.js"></script>
-		<style type="text/css">
-			.area-1 {
-				position: absolute;
-				left: 10px;
-				top: 10px;
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" lang="zh">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>information</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap-4.2.1.css" rel="stylesheet">
+    <style type="text/css">
+        .area-1 {
+            position: absolute;
+            left: 10px;
+            top: 10px;
 
-			}
+        }
 
-			.area-2 {
-				position: absolute;
-				right: 50px;
-				top: 30px;
-				text-align: center;
-			}
+        .area-2 {
+            position: absolute;
+            right: 50px;
+            top: 30px;
+            text-align: center;
+        }
 
-			.area-3 {
-				position: absolute;
-				left: 50%;
-				top: 40%;
-				transform: translateX(-50%) translateY(-50%);
-				text-align: center;
-			}
-			
-			.map-globe {
-				position: absolute;
-				left: 50%;
-				top: 75%;
-				transform: translateX(-50%) translateY(-50%);
-				width: 900px;
-				height: 500px;
-			}
-			
-		</style>
-		<script type="text/javascript" src="assets/echarts.min.js"></script>
-		<script type="text/javascript" src="assets/echarts-gl.min.js"></script>
-		<script type="text/javascript" src="assets/china.js"></script>
-		<script type="text/javascript" src="assets/world.js"></script>
+        .area-3 {
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            transform: translateX(-50%) translateY(-50%);
+            text-align: center;
+        }
 
-	</head>
-	<body style="color: aliceblue; background: #000000">
+        .map-globe {
+            position: absolute;
+            left: 50%;
+            top: 75%;
+            transform: translateX(-50%) translateY(-50%);
+            width: 900px;
+            height: 500px;
+        }
 
+    </style>
+    <script type="text/javascript" src="assets/echarts.min.js"></script>
+    <script type="text/javascript" src="assets/echarts-gl.min.js"></script>
+    <script type="text/javascript" src="assets/china.js"></script>
+    <script type="text/javascript" src="assets/world.js"></script>
+    <script src="./js/general.js"></script>
+    <link rel="stylesheet" href="./css/general.css">
 
-		<div class="area-1">
-			<h1 id="dateTime" style="font-size: 100px;"></h1>
-		</div>
+</head>
+<body style="color: aliceblue; background: #000000">
+<div id="next_rate"></div>
+<div id="back_rate"></div>
 
-		<div class="area-2">
-			<h1 class="text-right" style="font-size: 100px;">12°C/3°C</h1>
-			<div class=" "><img src="images/weather_4.png" alt="weather" width="200px"></div>
-		</div>
+<div class="area-1">
+    <h1 id="dateTime" style="font-size: 100px;"></h1>
+</div>
 
-
-		<div class="area-3">
-			<h1 style="font-size: 70px;">Hi, David!</h1>
-			<h1 style="font-size: 40px;">It's a fine day today. Let's go for a walk.</h1>
-		</div>
+<div class="area-2">
+    <h1 class="text-right" style="font-size: 100px;">12°C/3°C</h1>
+    <div class=" "><img src="images/weather_4.png" alt="weather" width="200px"></div>
+</div>
 
 
-		<div id="map-globe" class="map-globe"></div>
-		<script src="js/map-globe.js" type="text/javascript" charset="utf-8"></script>
+<div class="area-3">
+    <h1 style="font-size: 70px;">Hi, David!</h1>
+    <h1 style="font-size: 40px;">It's a fine day today. Let's go for a walk.</h1>
+</div>
+
+
+<div id="map-globe" class="map-globe"></div>
+<script src="js/map-globe.js" type="text/javascript" charset="utf-8"></script>
 
 <!-- 		<div align="center">
 			<iframe class="p2-iframe" src="map_globe_base.html" width="900" height="500" frameborder="0" scrolling="no"
@@ -76,13 +78,11 @@
 
 
 
-		<div id="next-rate"></div>
-		<div id="back-rate"></div>
-		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-		<script src="js/jquery-3.3.1.min.js"></script>
-		<!-- Include all compiled plugins (below), or include individual files as needed -->
-		<script src="js/popper.min.js"></script>
-		<script src="js/bootstrap-4.2.1.js"></script>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.3.1.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap-4.2.1.js"></script>
 
-	</body>
+</body>
 </html>
