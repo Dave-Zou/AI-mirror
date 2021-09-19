@@ -61,16 +61,27 @@
 				background-color: rgba(85, 255, 255, 0.8);
 				transition: background-color 0.5s, width 0.5s;
 			}
-			
+
+			#debug_info {
+				position: absolute;
+				left: 0;
+				bottom: 0;
+			}
+
 		</style>
 
 		<script type="text/javascript">
+
 			function changeShellColorTransparent(transparent){
 				var cc = document.getElementById('center-content');
 				var ccc = window.getComputedStyle(cc, null);
 				var color = ccc.borderColor;
 				var newColor = color.split(',').slice(0, 3).toString() + ', ' + transparent + ')';
+
 				console.log(newColor);
+				var debug = document.getElementById('debug_info');
+				debug.innerHTML = newColor;
+
 				cc.style.borderColor = newColor;
 			}
 			
@@ -82,6 +93,11 @@
 			}
 			
 			function updateChooseConfirmRate(rate){ // rate是进度，0-100
+				if (rate < 0){
+					rate = 0.01;
+				} else if (rate >= 100){
+					rate = 99.99;
+				}
 				changeShellColorTransparent(rate/100.);
 				changeRechargeLength(rate);
 			}
@@ -94,7 +110,7 @@
 	<body style="color: aliceblue; background: #000000; border: 0">
 		<div id="next_rate"></div>
 		<div id="back_rate"></div>
-
+		<div id="debug_info"></div>
 		<!--  标题-控制  -->
 		<div class="title-control">
 			<img src="images/Control.png" alt="Schedule">

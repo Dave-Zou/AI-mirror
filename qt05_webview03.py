@@ -78,6 +78,7 @@ class qt_main:
         self.w.webview.page().runJavaScript(f'window.location.href="{page_name}.html";')
 
     def proRateControlPage(self, rate):
+        print('proRateControlPage ', rate)
         self.w.webview.page().runJavaScript(f'updateChooseConfirmRate({rate});')
 
 def changeValue(obj, lk, q):
@@ -100,7 +101,7 @@ def changeValue(obj, lk, q):
                     obj.proRate(id_name, rate)
                 # 控制页面的进度
                 elif info['name'] == 'choose_rate_for_control':
-                    value = info['value']
+                    value = info['value'][1]
                     obj.proRateControlPage(value)
                 # 重定位
                 elif info['name'] == 'location':
