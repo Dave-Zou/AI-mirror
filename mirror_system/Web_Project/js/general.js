@@ -14,18 +14,14 @@ Date.prototype.format = function(fmt) {
 	return fmt;
 }
 
-
-
-
-
 window.onload = function(){
 	if (document.getElementById('dateTime') != null)
 		setInterval("document.getElementById('dateTime').innerHTML = (new Date()).format('yyyy-MM-dd hh:mm:ss');", 1000);
 };
 
 function pro_rate(id_name, rate) {
-	console.log(id_name);
-	var pro = document.getElementById(id_name);
+	console.log(id_name+'_rate');
+	var pro = document.getElementById(id_name+'_rate');
 	pro.style.width = rate + '%';
 	return pro.clientWidth;
 }

@@ -78,29 +78,34 @@ class qt_main:
         self.w.webview.page().runJavaScript(f'window.location.href="{page_name}.html";')
 
     def proRateControlPage(self, rate):
-        self.w.webview.page().runJavaScript(f'updateProcessRate({rate});')
+        self.w.webview.page().runJavaScript(f'updateChooseConfirmRate({rate});')
 
 def changeValue(obj, lk, q):
     while True:
         with lk:
             info = q.get()
             if info['isChange']:
-                if info['name'] == 'Size': # 大小
+                # 大小
+                if info['name'] == 'Size':
                     value = info['value']
                     obj.changeSize(value)
-                elif info['name'] == 'Pos': # 位置偏移
+                # 位置偏移
+                elif info['name'] == 'Pos':
                     x, y = value = info['value']
                     obj.movePos(x, y)
-                elif info['name'] == 'pro_rate': # 处理进度
+                # 充能进度
+                elif info['name'] == 'next_back_rate':
                     id_name, rate = value = info['value']
                     print(id_name, rate)
                     obj.proRate(id_name, rate)
-                elif info['name'] == 'location': # 重定位
-                    value = info['value']
-                    obj.location(value)
-                elif info['name'] == 'pro_rate_controlPage':
+                # 控制页面的进度
+                elif info['name'] == 'choose_rate_for_control':
                     value = info['value']
                     obj.proRateControlPage(value)
+                # 重定位
+                elif info['name'] == 'location':
+                    value = info['value']
+                    obj.location(value)
 
 def runWindow(lk, q):
     Ball = qt_main()

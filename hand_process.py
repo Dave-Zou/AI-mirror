@@ -1,6 +1,6 @@
 # 加载QT界面和多线程
 import time
-
+from typing import List
 import qt05_webview03 as qt_main
 from multiprocessing import Process, Lock, Manager, Queue
 import numpy as np
@@ -23,21 +23,109 @@ class hand:
         # Qt显示窗口大小
         self.windowSize = (1920, 1080)
 
-        # 状态代号
-        self.state = 'index page'
+        # 状态
+        self.state = self.State()
 
         # 初始化five条件充能
-        self.five_recharge = self.condition_charge(recharge_gesture='five')
+        self.five_recharge = self.condition_charge(recharge_gesture=('five',))
         self.five_recharge.size_threshold = 50
+        self.five_recharge.recharge_name = 'next'
 
         # 初始化fist条件充能
-        self.fist_recharge = self.condition_charge(recharge_gesture='fist')
+        self.fist_recharge = self.condition_charge(recharge_gesture=('fist',))
         # 修改充能条件
         self.fist_recharge.need_click_state = None # 不需要判断Click
         self.fist_recharge.x_range = (140, 500)  # 缩小X范围
         self.fist_recharge.y_range = (90, 400) # 缩小Y范围
         self.fist_recharge.size_threshold = 20 # 减小充能大小阈值
         self.fist_recharge.disappear_position_deviation = 40 # 增大消失重置位置偏差
+        self.fist_recharge.recharge_name = 'back'
+
+        # 手指指向条件充能
+        self.choose_recharge = self.condition_charge(recharge_gesture=('one', 'gun'))
+        # 修改充能条件
+        self.choose_recharge.need_click_state = None # 不需要判断Click
+        self.choose_recharge.x_range = (140, 500)  # 缩小X范围
+        self.choose_recharge.y_range = (90, 400) # 缩小Y范围
+        self.choose_recharge.size_threshold = 30 # 充能大小范围
+        self.choose_recharge.ID_disappear_time_threshold = 1 # 消失重置时间范围
+        self.choose_recharge.recharge_name = 'choose'
+
+        # 倒退充能
+        self.back_recharge = self.quit_recharge()
+
+
+    class State:
+        def __init__(self, order=0):
+            # 状态列表
+            self.state_list = ['index page', 'schedule page', 'control page', 'healthy page']
+            # 序号
+            self.state_order = order
+            # 状态
+            self.state = self.state_list[self.state_order]
+            # 子状态
+            self.subStates_level = [0 for _ in self.state_list]
+            # 长度
+            self.length = len(self.state_list)
+
+        def enterSubState(self):
+            self.subStates_level[self.state_order] += 1
+
+        def exitSubState(self):
+            self.subStates_level[self.state_order] -= 1
+
+        # 子状态属性
+        @property
+        def subState(self):
+            return self.subStates_level[self.state_order]
+        # 子状态属性设置
+        @subState.setter
+        def subState(self, value):
+            self.subStates_level[self.state_order] = value
+
+        def nextState(self):
+            self.state_order += 1
+            if self.state_order >= self.length:
+                self.state_order = 0
+            self.state = self.state_list[self.state_order]
+
+        def previousState(self):
+            self.state_order -= 1
+            if self.state_order < 0:
+                self.state_order = self.length - 1
+            self.state = self.state_list[self.state_order]
+
+        def __add__(self, other):
+            print('add ', other)
+            if other > 0:
+                for i in range(other):
+                    self.nextState()
+            if other < 0:
+                for i in range(-other):
+                    self.previousState()
+            return self
+
+        def __iadd__(self, other):
+            self.__add__(other)
+
+        def __sub__(self, other):
+            if other < 0:
+                for i in range(other):
+                    self.nextState()
+            if other > 0:
+                for i in range(-other):
+                    self.previousState()
+            return self
+
+        def __isub__(self, other):
+            self.__sub__(other)
+
+
+        def __str__(self):
+            return self.state
+
+        def __eq__(self, other):
+            return self.state == other
 
 
     #* 发送大小
@@ -67,24 +155,11 @@ class hand:
         info = {'isChange': True, 'name': 'Pos', 'value': [x, y]}
         self.q.put(info)
 
+    # 数据传入，处理中心
     def main(self, handPose_list, gesture_list, hands_angle_list):
-        # 数据传入，处理中心
         self.update_state(handPose_list, gesture_list, hands_angle_list)
 
-    def update_pro_rate(self, p):
-        info = {'isChange': True, 'name': 'pro_rate'}
-        if p == 1:
-            rate = self.interactive_1_recharge_power / self.interactive_1_recharge_power_threshold * 100
-            rate = np.around(rate, 2)
-            info['value'] = ('interactive_1', rate)
-            self.q.put(info)
-
-        if p == 2:
-            rate = self.interactive_2_recharge_power / self.interactive_2_recharge_power_threshold * 100
-            rate = np.around(rate, 2)
-            info['value'] = ('interactive_2', rate)
-            self.q.put(info)
-
+    # 手势条件充能类
     class condition_charge:
         def __init__(self, recharge_gesture=None, isReset=False):
             '''
@@ -114,6 +189,7 @@ class hand:
             # recharge_gesture: 满足条件的手势名
             # need_click_state: 是否需要判断click的状态（False,True），None表示不需要
             # recharge_rate: 充能率（0-100）
+            # recharge_complete_info: 充能完成时的信息，原始hand关键点信息 和 hand_size
 
             if not isReset: # 初始化，非手动重置
                 # 判断常量
@@ -129,6 +205,9 @@ class hand:
                 self.need_click_state = False
                 self.recharge_gesture = recharge_gesture
                 self.isPrint = False # 调试输出
+                self.recharge_complete_info = {'hand': None, 'hand_size': None}
+                self.recharge_name = None
+
             # 判断变量
             self.recharge_hand_id = -1
             self.recharge_hand_id_alive = False
@@ -145,9 +224,22 @@ class hand:
 
             self.recharge_rate = 0
 
+
             if isReset:
                 self.debugPrint('is Reset ！！！')
 
+        def reset(self):
+            self.recharge_hand_id = -1
+            self.recharge_hand_id_alive = False
+            self.ID_disappear_time = None
+            self.ID_disappear_info = {}
+
+            self.recharge_signal = False
+            self.recharge_power = 0
+
+            self.recharge_id_info = {'size': 0, 'center': (0, 0)}
+
+            self.recharge_rate = 0
 
         def debugPrint(self, *args, **kwargs):
             if self.isPrint:
@@ -225,25 +317,8 @@ class hand:
                 # 当前是正常状态，非交互状态，那么当手移到屏幕中间时，开始下一状态(interactive_1)充能2s
                 # 条件：手掌中心处于预定范围内，且手的大小超过阈值，手势动作为five，不能有其他动作，开始充能
                 # 充能：如果当前帧满足条件，充能数增加，否则充能数减少，充能数如果小于初始值，则重置信号
-                # ID： 如果在判定中ID消失，记录下消失时刻之前的大小和位置，如果在0.5s内产生满足条件的新ID，
+                # ID： 如果在判定中ID消失，记录下消失时刻之前的大小和位置，如果在范围内产生满足条件的新ID，
                 #      且大小和位置与前ID偏差较小，则更新ID。期间充能暂停。否则，重置状态。
-
-                # x_range: 中心位置的X范围
-                # y_range: 中心位置的Y范围
-                # size_threshold: 手的大小阈值
-                # recharge_hand_id: 准备交互的手的ID
-                # recharge_hand_id_alive: 当前充能的ID是否存活
-                # ID_disappear_time: ID消失时刻的时间
-                # ID_disappear_info: 消失时刻的信息，大小和位置
-                #
-                # ID_disappear_time_threshold： 消失重置的时间阈值
-                # recharge_signal: 开始充能的信号
-                # recharge_power: 充能计数
-                # recharge_power_threshold: 充能计数阈值
-                # recharge_time: 开始充能的时间
-                # recharge_complete: 充能完成标志
-                # recharge_complete_time: 充能完成时间
-                # recharge_id_info: ID充能时的信息，大小和位置
 
                 hand_id = hand_id_list[i]  # 手的ID
                 hand_palm_center = hand[2]  # 手的掌心坐标
@@ -254,7 +329,7 @@ class hand:
                 condition = False
                 if self.x_range[0] <= hand_palm_center[0] <= self.x_range[1]:
                     if self.y_range[0] <= hand_palm_center[1] <= self.y_range[1]:
-                        if hand_size >= self.size_threshold and gesture_list[i] == self.recharge_gesture:
+                        if hand_size >= self.size_threshold and gesture_list[i] in self.recharge_gesture:
                             if self.need_click_state is None:
                                 condition = True  # 满足条件
                             elif click_state_list[i] == self.need_click_state:
@@ -278,9 +353,11 @@ class hand:
                         if hand_id == self.recharge_hand_id:  # 是充能ID，则ID肯定存活
                             # ID充能判断
                             if self.recharge_power >= self.recharge_power_threshold:  # ! 充能完成
-                                # ! 更新完成标志，更新完成时间
+                                # ! 更新完成标志，更新完成时间，记录完成时刻信息
                                 self.recharge_complete = True
                                 self.recharge_complete_time = time.time()
+                                self.recharge_complete_info['hand'] = hand
+                                self.recharge_complete_info['size'] = hand_size
                                 self.debugPrint('enter next state!')  # ? 打印输出
                                 # ! 返回结果，充能已完成
                                 return 'recharge complete'
@@ -323,70 +400,193 @@ class hand:
                 # 更新充能率
                 self.update_recharge_rate()
 
-    # five和fist手势判断
-    def five_fist_recharge(self, handPose_list, gesture_list):
-        if not self.fist_recharge.recharge_signal:  # 如果fist没在充能
-            if self.five_recharge.recharge(handPose_list, gesture_list) == 'recharge complete':
-                print('充能已完成')
-                # 重置状态
-                self.five_recharge.__init__(isReset=True)
-                return 'five Out'
-            self.update_rate('next_rate', self.five_recharge)
-            print('five power rate: ', self.five_recharge.recharge_rate, self.five_recharge.recharge_id_info['size'])  # 显示充能完成率
-        if not self.five_recharge.recharge_signal:  # 如果five没在充能
-            if self.fist_recharge.recharge(handPose_list, gesture_list) == 'recharge complete':
-                print('充能已完成')
-                # 重置状态
-                self.fist_recharge.__init__(isReset=True)
-                return 'fist Out'
-            self.update_rate('back_rate', self.fist_recharge)
-            print('fist power rate: ', self.fist_recharge.recharge_rate, self.fist_recharge.recharge_id_info['size'])  # 显示充能完成率
+    # 倒退充能类
+    class quit_recharge:
+        def __init__(self, isReset=None):
+            # start_recharge: 开始充能
+            # recharge_signal: 是否充能信号
+            # recharge_time_threshold: 充能完成的时间阈值
+            # pause_time_threshold: 暂停重置的时间阈值
+            # recharge_rate: 充能完成率（0-100）
+            # current_time: 充能时更新存储的当前时间，用于充能判断
+            # recharge_name: 充能名称
+
+            if not isReset: # 非手动重置的部分，即常量
+                self.recharge_time_threshold = 8
+                self.pause_time_threshold = 1.5
+
+            self.recharge_rate = 0
+            self.current_time = 0
+            self.start_recharge = False
+            self.recharge_signal = False
+            self.recharge_name = 'quit'
 
 
+        def reset(self): # 重置所有变量
+            self.__init__(isReset=True)
+
+        def startRecharge(self): # 开始充能计时
+            self.start_recharge = True
+            self.recharge_signal = True
+            self.start_recharge_time = time.time()
+
+        def pauseRecharge(self): # 暂停
+            if self.recharge_signal: # 暂停未暂停的充能
+                self.recharge_signal = False
+                self.pause_recharge_time = time.time()
+            else: # 暂停已暂停的充能，将进入暂停重置计时
+                if time.time() - self.pause_recharge_time > self.pause_time_threshold:
+                    self.reset()
+
+        def continueRecharge(self):
+            if self.start_recharge: # 开启充能状态
+                self.recharge_signal = True
+                self.start_recharge_time += time.time() - self.pause_recharge_time
+
+        def update_recharge_rate(self):
+            if self.start_recharge and self.recharge_signal:
+                rate = (self.current_time - self.start_recharge_time) / self.recharge_time_threshold * 100
+                self.recharge_rate = rate
+
+        def recharge(self, QuitCondition=None):
+            if QuitCondition is None:
+                return
+
+            if QuitCondition: #? 满足倒退充能的条件
+                if not self.start_recharge:  #? 没有开始充能
+                    self.startRecharge()  # 开启充能开关
+                else:  #? 已经开始充能
+                    if self.recharge_signal:  # 处于暂停状态
+                        self.continueRecharge()  # 将暂停状态取消
+            else: #? 不满足倒退充能的条件
+                if self.back_recharge.start_recharge:  #? 已经开始充能
+                    self.back_recharge.pauseRecharge()  # 暂停充能
+                else:  #? 没有开始充能
+                    pass
+
+            if not self.start_recharge:
+                return 'not start'
+
+            if not self.recharge_signal: # 暂停中
+                return 'pausing...'
+
+            self.current_time = time.time()
+            self.update_recharge_rate()
+
+            if self.current_time - self.start_recharge_time > self.recharge_time_threshold:
+                return 'complete recharge'
+
+
+
+    # 对手势进行条件充能
+    def more_gesture_recharge(self, recharges, handPose_list, gesture_list, has_back_recharge=False):
+        result = None # 返回结果
+        has_been_recharge = False
+
+        for gesture_recharge in recharges:
+            if gesture_recharge.recharge_signal: # 是否条件充能中已有开始充能
+                has_been_recharge = True
+                # 如果此充能已开始，则继续
+                if gesture_recharge.recharge(handPose_list, gesture_list) == 'recharge complete':
+                    print(f'{gesture_recharge.recharge_name}充能已完成')
+                    gesture_recharge.reset()
+                    gesture_recharge.recharge_rate = 100
+                    result = f'{gesture_recharge.recharge_name} Out'
+
+                self.update_rate(gesture_recharge)
+                print('recharge state: ', gesture_recharge.recharge_name, gesture_recharge.recharge_rate)
+
+        # 都没有开始充能，则尝试对每个条件充能
+        if not has_been_recharge:
+            for gesture_recharge in recharges:
+                gesture_recharge.recharge(handPose_list, gesture_list)
+                # 如果在条件充能后，开始充能了，则不再继续判断后续的条件充能
+                if gesture_recharge.recharge_signal:
+                    has_been_recharge = True
+                    break
+
+        if has_back_recharge:
+            if not has_been_recharge: # 满足倒退充能的条件（没有手势在充能）
+                back_recharge = self.back_recharge.recharge(QuitCondition=True)
+            else: # 不满足倒退充能的条件（存在手势充能）
+                back_recharge = self.back_recharge.recharge(QuitCondition=False)
+            if back_recharge == 'complete recharge':
+                result = 'quit Out'
+            self.update_rate(self.back_recharge)
+
+        return result
+
+    # 跳转页面
     def windowLocation(self):
-        value = self.state.split(' ')[0]
+        value = self.state.state.split(' ')[0]
         info = {'isChange': True, 'name': 'location', 'value': value}
         self.q.put(info)
 
-    def update_rate(self, name, recharge):
-        info = {'isChange': True, 'name': 'pro_rate', 'value': (f'{name}', recharge.recharge_rate)}
-        if self.state == 'control page':
-            info['name'] = 'pro_rate_controlPage'
+    # 更新显示进度
+    def update_rate(self, recharge):
+        # 默认为前进后退进度
+        rate_name = 'next_back_rate'
+        if recharge.recharge_name == 'choose': # 充能名为choose
+            if self.state == 'schedule page': # 当前页面
+                rate_name = 'choose_rate_for_schedule' # 设置进度名称
+            elif self.state == 'control page': # 当前页面
+                rate_name = 'choose_rate_for_control' # 设置进度名称
+
+        elif recharge.recharge_name == 'quit':
+            rate_name = 'quit_rate'
+
+        info = {'isChange': True, 'name': rate_name, 'value': (f'{recharge.recharge_name}', recharge.recharge_rate)}
         self.q.put(info)
 
+    # -----------------------------------------------------------------------------------------------------------------
+    # 充能处理
+    def recharge_pro(self, handPose_list, gesture_list, gesture_recharge_add=None):
+        gestures = [self.five_recharge, self.fist_recharge]
+        if gesture_recharge_add is not None:
+            gestures += gesture_recharge_add
+
+        recharge_result = self.more_gesture_recharge(gestures, handPose_list, gesture_list)
+
+        print(recharge_result) #? 打印输出
+        if recharge_result == 'next Out' and self.state.subState == 0:
+            self.state.nextState()
+        elif recharge_result == 'back Out' and self.state.subState == 0:
+            self.state.previousState()
+
+        elif recharge_result == 'choose Out':
+            self.state.subState += 1
+
+        elif recharge_result == 'quit Out':
+            self.state.subState -= 1
+
+    # -----------------------------------------------------------------------------------------------------------------
+
+    # 根据传入数据，更新状态
     def update_state(self, handPose_list, gesture_list, hands_angle_list):
-        state = self.state
+        state = self.state.state
+        print(state) #? 打印输出
+
         if self.state == 'index page':
             print(self.state)
-            five_fist_result = self.five_fist_recharge(handPose_list, gesture_list)
-            if five_fist_result == 'five Out':
-                self.state = 'schedule page'
-            elif five_fist_result == 'fist Out':
-                self.state = 'healthy page'
+            self.recharge_pro(handPose_list, gesture_list)
+
 
         elif self.state == 'schedule page':
             print(self.state)
-            five_fist_result = self.five_fist_recharge(handPose_list, gesture_list)
-            if five_fist_result == 'five Out':
-                self.state = 'control page'
-            elif five_fist_result == 'fist Out':
-                self.state = 'index page'
+            self.recharge_pro(handPose_list, gesture_list)
 
         elif self.state == 'control page':
             print(self.state)
-            five_fist_result = self.five_fist_recharge(handPose_list, gesture_list)
-            if five_fist_result == 'five Out':
-                self.state = 'healthy page'
-            elif five_fist_result == 'fist Out':
-                self.state = 'schedule page'
+            if self.state.subState == 0:
+                self.recharge_pro(handPose_list, gesture_list, gesture_recharge_add=[self.choose_recharge])
+            elif self.state.subState == 1:
+                print('control sub-state')
 
         elif self.state == 'healthy page':
             print(self.state)
-            five_fist_result = self.five_fist_recharge(handPose_list, gesture_list)
-            if five_fist_result == 'five Out':
-                self.state = 'index page'
-            elif five_fist_result == 'fist Out':
-                self.state = 'control page'
+            if self.state.subState == 0:
+                self.recharge_pro(handPose_list, gesture_list,  gesture_recharge_add=[self.choose_recharge])
 
         if self.state != state:
             self.windowLocation()
+
