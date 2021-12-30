@@ -7,6 +7,7 @@ from multiprocessing import Process, Lock, Manager, Queue
 from PyQt5.QtCore import *
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import *
+import serial
 
 
 root_path = os.path.abspath(os.path.dirname('__file__'))
@@ -31,6 +32,15 @@ class MainWindow(QMainWindow):
 
         self.webview.load(QUrl(url))
         self.setCentralWidget(self.webview)
+
+        #self.ser1 = serial.Serial("COM8", 9600, timeout=0.5)
+        #self.ser2 = serial.Serial("COM11", 9600, timeout=0.5)
+
+        #self.ser1.write('\x11'.encode())
+        #self.ser2.write('\x11'.encode())
+        # ser1 = serial.Serial("COM5", 115200, timeout=0.5)
+        # ser1 = serial.Serial("COM5", 115200, timeout=0.5)
+        # ser1 = serial.Serial("COM5", 115200, timeout=0.5)
 
 
 ################################################
@@ -78,8 +88,26 @@ class qt_main:
         self.w.webview.page().runJavaScript(f'window.location.href="{page_name}.html";')
 
     def proRateControlPage(self, rate):
-        print('proRateControlPage ', rate)
         self.w.webview.page().runJavaScript(f'updateChooseConfirmRate({rate});')
+
+    def chooseModulesControlPage(self, module_num):
+        self.w.webview.page().runJavaScript(f'chooseModules({module_num});')
+
+    def controlOpenModule(self, module_num):
+        self.w.webview.page().runJavaScript(f'controlOpenModule({module_num});')
+        if module_num < 3:
+            self.w.ser1.write('\x01'.encode())
+        else:
+            self.w.ser2.write('\x01'.encode())
+
+
+    def controlCloseModule(self, module_num):
+        self.w.webview.page().runJavaScript(f'controlCloseModule({module_num});')
+        if module_num < 3:
+            self.w.ser1.write('\x11'.encode())
+        else:
+            self.w.ser2.write('\x11'.encode())
+
 
 def changeValue(obj, lk, q):
     while True:
@@ -107,6 +135,21 @@ def changeValue(obj, lk, q):
                 elif info['name'] == 'location':
                     value = info['value']
                     obj.location(value)
+                # 选择模块
+                elif info['name'] == 'choose_modules_for_control':
+                    value = info['value']
+                    obj.chooseModulesControlPage(value)
+                # 控制模块
+                elif info['name'] == 'control_open_module':
+                    print(info)
+                    value = info['value']
+                    obj.controlOpenModule(value)
+
+                elif info['name'] == 'control_close_module':
+                    value = info['value']
+                    obj.controlCloseModule(value)
+
+
 
 def runWindow(lk, q):
     Ball = qt_main()

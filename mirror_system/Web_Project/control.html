@@ -76,7 +76,7 @@
 				var cc = document.getElementById('center-content');
 				var ccc = window.getComputedStyle(cc, null);
 				var color = ccc.borderColor;
-				var newColor = color.split(',').slice(0, 3).toString() + ', ' + transparent + ')';
+				var newColor = color.split(',').slice(0, 3).toString().replace(')', '') + ', ' + transparent + ')';
 
 				console.log(newColor);
 				var debug = document.getElementById('debug_info');
@@ -93,15 +93,47 @@
 			}
 			
 			function updateChooseConfirmRate(rate){ // rate是进度，0-100
-				if (rate < 0){
+				if (rate < 1){
 					rate = 0.01;
-				} else if (rate >= 100){
+				} else if (rate >= 99){
 					rate = 99.99;
 				}
 				changeShellColorTransparent(rate/100.);
 				changeRechargeLength(rate);
 			}
-			
+
+			function chooseModules(modules_num) {
+				var module1 = document.getElementById('modules-1');
+				var module2 = document.getElementById('modules-2');
+				var module3 = document.getElementById('modules-3');
+				var module4 = document.getElementById('modules-4');
+				var module_list = [module1, module2, module3, module4];
+				for (var i = 0; i < 4; i++) {
+					if (modules_num-1 === i){
+						module_list[i].style.backgroundColor = 'rgba(236,222,52,0.71)';
+					} else {
+						module_list[i].style.backgroundColor = 'rgba(0, 0, 0, 0)';
+					}
+				}
+			}
+
+			function controlOpenModule(modules_num) {
+				var module1_toggle = document.getElementById('modules-1').getElementsByTagName('label')[0];
+				var module2_toggle = document.getElementById('modules-2').getElementsByTagName('label')[0];
+				var module3_toggle = document.getElementById('modules-3').getElementsByTagName('label')[0];
+				var module4_toggle = document.getElementById('modules-4').getElementsByTagName('label')[0];
+				var module_toggle_list = [module1_toggle, module2_toggle, module3_toggle, module4_toggle];
+				module_toggle_list[modules_num-1].click();
+			}
+
+			function controlCloseModule(modules_num) {
+				var module1_toggle = document.getElementById('modules-1').getElementsByTagName('label')[0];
+				var module2_toggle = document.getElementById('modules-2').getElementsByTagName('label')[0];
+				var module3_toggle = document.getElementById('modules-3').getElementsByTagName('label')[0];
+				var module4_toggle = document.getElementById('modules-4').getElementsByTagName('label')[0];
+				var module_toggle_list = [module1_toggle, module2_toggle, module3_toggle, module4_toggle];
+				module_toggle_list[modules_num-1].click();
+			}
 		</script>
 
 		
@@ -119,28 +151,28 @@
 
 		<!-- 中间图标 -->
 		<div id="center-content" class="center-content container">
-			<div class="toggle toggle--neon col-md-5">
+			<div id="modules-3" class="toggle toggle--neon col-md-5">
 				<img src="images/air_conditioner.png" alt="">
 				<input type="checkbox" id="toggle--neon" class="toggle--checkbox">
 				<label class="toggle--btn" for="toggle--neon" data-label-on="on" data-label-off="off"></label>
 			</div>
 
 
-			<div class="toggle toggle--neon offset-md-1 col-md-5">
+			<div id="modules-4" class="toggle toggle--neon offset-md-1 col-md-5">
 				<img src="images/bathroom.png" alt="">
 				<input type="checkbox" id="toggle--neon1" class="toggle--checkbox">
 				<label class="toggle--btn" for="toggle--neon1" data-label-on="on" data-label-off="off"></label>
 			</div>
 
 
-			<div class="toggle toggle--neon col-md-5">
+			<div id="modules-2" class="toggle toggle--neon col-md-5">
 				<img src="images/microwave.png" alt="">
 				<input type="checkbox" id="toggle--neon2" class="toggle--checkbox">
 				<label class="toggle--btn" for="toggle--neon2" data-label-on="on" data-label-off="off"></label>
 			</div>
 
 
-			<div class="toggle toggle--neon offset-md-1 col-md-5">
+			<div id="modules-1" class="toggle toggle--neon offset-md-1 col-md-5">
 				<img src="images/refrigerator.png" alt="">
 				<input type="checkbox" id="toggle--neon3" class="toggle--checkbox">
 				<label class="toggle--btn" for="toggle--neon3" data-label-on="on" data-label-off="off"></label>
